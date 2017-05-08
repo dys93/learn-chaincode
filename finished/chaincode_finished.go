@@ -54,6 +54,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if err != nil {
 		return nil, err
 	}
+	var empty []string
+	jsonAsBytes, _ := json.Marshal(empty)	
 	err = stub.PutState(UserIndexStr, jsonAsBytes)
 	if err != nil {
 		return nil, err
@@ -135,7 +137,6 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
 	}
-
 	name = args[0] //rename for funsies
 	value = args[1]
 	err = stub.PutState(name, []byte(value)) //write the variable into the chaincode state
@@ -243,7 +244,7 @@ func (t *SimpleChaincode) update_user_account(stub shim.ChaincodeStubInterface, 
 		return nil, errors.New(msg)
 	}
 	
-	userAsByte, err := stub.GetState(username)
+	userAsByte, err := stub.GetState(userName)
 	if err != nil {
 		return nil, errors.New("user don't exist")
 	}
@@ -254,7 +255,7 @@ func (t *SimpleChaincode) update_user_account(stub shim.ChaincodeStubInterface, 
 		return nil, errors.New("User don't have enough coin")
 	}
 	userAsByte, err = json.Marshal(lucky_dog)
-	stub.PutState(username, userAsByte)
+	stub.PutState(userName, userAsByte)
 
 	return nil, nil
 }
