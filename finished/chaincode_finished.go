@@ -242,10 +242,10 @@ func (t *SimpleChaincode) update_user_account(stub shim.ChaincodeStubInterface, 
 	}
 	var lucky_dog User
 	json.Unmarshal(userAsByte, &lucky_dog)
-	lucky_dog.Coin = lucky_dog.Coin + coinChange
 	if lucky_dog.Coin + coinChange < 0{
 		return nil, errors.New("User don't have enough coin")
 	}
+	lucky_dog.Coin = lucky_dog.Coin + coinChange
 	userAsByte, err = json.Marshal(lucky_dog)
 	stub.PutState(userName, userAsByte)
 
