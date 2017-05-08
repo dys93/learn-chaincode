@@ -15,8 +15,6 @@ import (
 type SimpleChaincode struct {
 }
 
-var FarmWeatherIndexStr = "_farmindex"    //name for the key/value that will store a list of all known marbles
-var ActiveInsuranceStr = "_openinsurance" //name for the key/value that will store all open trades
 var UserIndexStr = "_userindex"
 
 type User struct {
@@ -158,7 +156,7 @@ func (t *SimpleChaincode) create_user(stub shim.ChaincodeStubInterface, args []s
 	//   0       1       2     3
 	//  'name'   'money'
 	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 4")
+		return nil, errors.New("Incorrect number of arguments. Expecting 2")
 	}
 
 	//input sanitation
@@ -176,17 +174,9 @@ func (t *SimpleChaincode) create_user(stub shim.ChaincodeStubInterface, args []s
 		return nil, errors.New("2rd argument must be a numeric string")
 	}
 
-	//check if marble already exists
 	UserAsBytes, err := stub.GetState(name)
-	if err != nil {
-		return nil, errors.New("Failed to get user name")
-	}
-	res := User{}
-	json.Unmarshal(UserAsBytes, &res)
-	if res.Name == name {
-		fmt.Println("This user arleady exists: " + name)
-		fmt.Println(res)
-		return nil, errors.New("This user arleady exists") //all stop a user by this name exists
+	if err == nil {
+		return nil, errors.New("This user arleady exists")
 	}
 
 	//build the user json string manually
