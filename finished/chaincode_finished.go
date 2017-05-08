@@ -84,6 +84,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		return t.Write(stub, args)
 	} else if function == "create_user" { //create a new marble
 		return t.create_user(stub, args)
+	} else if function == "update_user_account" {
+		return t.update_user_account(stub, args)
 	}
 	fmt.Println("invoke did not find func: " + function) //error
 
